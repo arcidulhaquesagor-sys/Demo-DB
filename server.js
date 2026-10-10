@@ -16,6 +16,17 @@ const pool = new Pool({
   ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
 });
 
+// Explicit check for DATABASE_URL so it doesn't default to localhost
+if (!process.env.DATABASE_URL) {
+  console.error('====================================================');
+  console.error('FATAL ERROR: DATABASE_URL environment variable is not set!');
+  console.error('If deploying on Render, you must add the "Internal Connection String"');
+  console.error('from your PostgreSQL database as the DATABASE_URL environment variable');
+  console.error('in your Web Service settings (Environment section).');
+  console.error('====================================================');
+  process.exit(1);
+}
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
